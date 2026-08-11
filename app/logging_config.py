@@ -22,7 +22,6 @@ class JsonlFileProcessor:
         return event_dict
 
 
-
 def scrub_recursive(val: Any) -> Any:
     if isinstance(val, dict):
         return {k: scrub_recursive(v) for k, v in val.items()}
@@ -35,7 +34,6 @@ def scrub_recursive(val: Any) -> Any:
 
 def scrub_event(_: Any, __: str, event_dict: dict[str, Any]) -> dict[str, Any]:
     return scrub_recursive(event_dict)
-
 
 
 def configure_logging() -> None:
@@ -54,7 +52,6 @@ def configure_logging() -> None:
         wrapper_class=structlog.make_filtering_bound_logger(logging.INFO),
         cache_logger_on_first_use=True,
     )
-
 
 
 def get_logger() -> structlog.typing.FilteringBoundLogger:

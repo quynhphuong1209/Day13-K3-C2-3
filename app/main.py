@@ -42,6 +42,18 @@ async def metrics() -> dict:
     return snapshot()
 
 
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    error_type = type(exc).__name__
+    correlation_id = getattr(request.state, "correlation_id", "MISSING")
+    headers = {"x-request-id": correlation_id}
+    return JSONResponse(
+        status_code=500,
+        content={"detail": error_type},
+        headers=headers,
+    )
+
+
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: Request, body: ChatRequest) -> ChatResponse:
     bind_contextvars(
@@ -93,18 +105,6 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
             payload={"detail": str(exc), "message_preview": summarize_text(body.message)},
         )
         raise exc
-
-
-@app.exception_handler(Exception)
-async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:
-    error_type = type(exc).__name__
-    correlation_id = getattr(request.state, "correlation_id", "MISSING")
-    headers = {"x-request-id": correlation_id}
-    return JSONResponse(
-        status_code=500,
-        content={"detail": error_type},
-        headers=headers,
-    )
 
 
 @app.post("/incidents/{name}/enable")
