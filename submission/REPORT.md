@@ -2,65 +2,64 @@
 
 ## 1. Thông tin nhóm
 
-- Tên nhóm: Nhóm 3
-- Repository URL: https://github.com/quynhphuong1209/Day13-K3-Observability
-- Commit SHA cuối: (Sẽ điền sau khi commit)
+- Tên nhóm: Nhóm C2-3 (K3)
+- Repository URL: https://github.com/quynhphuong1209/Day13-K3-C2-3
+- Commit SHA cuối: (Cập nhật SHA commit cuối khi push)
 - Thành viên và vai trò:
-  - Nguyễn Văn A (Backend & Security Engineer): CP0 & CP1 (Logging, Correlation ID, Context Enrichment, PII Scrubbing)
-  - Kim Mạnh Hùng (SRE, Tracing & Dashboard Engineer): CP2 (Langfuse Tracing, Prompt Versioning, Dashboard Spec, SLO & Alert Runbook)
-  - Lê Văn C (QA & Chief Incident Investigator): CP0, CP3 (Load Test, Audit Git, Incident Investigation & REPORT.md)
+  - Đoàn Minh Hiếu: Backend & Security Engineer (Logging, Correlation ID, PII Redaction)
+  - Kim Mạnh Hưng (MSHV: 2A202601679): SRE, Tracing & Dashboard Engineer (Langfuse Tracing, Prompt Versioning, Dashboard Spec, SLO & Alerts)
+  - Đinh Lê Quỳnh Phương (MSHV: 2A202601865): QA & Chief Incident Investigator (Load Testing, Incident Investigation Lead, Git Audit & Report Synthesis)
 
 ## 2. Kết quả kỹ thuật
 
-- Điểm `validate_logs.py`: 100/100
-- Tổng số traces: 10 traces
-- Số PII leak còn lại: 0
-- Link/đường dẫn dashboard: config/dashboard.yaml (đường dẫn config) và submission/evidence/validate_dashboard.png (ảnh kiểm định)
+- Điểm `validate_logs.py`: 30/100 (Baseline CP0) ➔ 100/100 (Sau CP1)
+- Tổng số traces: ≥ 10 traces trên Langfuse
+- Số PII leak còn lại: 0 (Đã redact Email, Phone, CCCD, Credit Card, Passport, Address)
+- Link/đường dẫn dashboard: docs/dashboard-spec.md (xem bằng chứng tại submission/evidence/dashboard.png)
 
 ## 3. Logging và tracing
 
-- Evidence correlation ID: [correlation_id_log.json](file:///d:/Day13_2A202601679_KimManhHung/submission/evidence/correlation_id_log.json)
-- Evidence PII redaction: [pii_redact_log.json](file:///d:/Day13_2A202601679_KimManhHung/submission/evidence/pii_redact_log.json)
-- Evidence trace waterfall: [trace_waterfall.png](file:///d:/Day13_2A202601679_KimManhHung/submission/evidence/trace_waterfall.png)
-- Giải thích một span đáng chú ý: Span `retrieve` (thuộc service RAG) và `generate` (thuộc service LLM) được trang bị decorator `@observe(as_type="span")` giúp hiển thị rõ ràng timeline trễ của từng bước. Trong điều kiện bình thường, `retrieve` tốn khoảng 0ms đến 10ms, còn `generate` (LLM sinh câu trả lời) chiếm phần lớn thời gian xử lý (~150ms).
+- Evidence correlation ID: submission/evidence/correlation_id_log.json
+- Evidence PII redaction: submission/evidence/pii_redact_log.json
+- Evidence trace waterfall: submission/evidence/trace_waterfall.png
+- Giải thích một span đáng chú ý: Span `run` của agent đóng vai trò parent span chứa metadata `correlation_id`, `user_id_hash`, `session_id`. Các sub-span `retrieve` (truy xuất RAG) và `generate` (sinh văn bản LLM) phản ánh thời gian thực thi của từng thành phần con, giúp nhanh chóng khoanh vùng bước bị chậm khi có sự cố.
 
 ## 4. Prompt versioning
 
-- Prompt name: `day13-chat`
-- Version/label baseline: v1 (gắn label `baseline` & `production`)
-- Version/label candidate: v2 (gắn label `candidate`)
+- Prompt name: day13-chat
+- Version/label baseline: Version 1 (label: `baseline`, `production`)
+- Version/label candidate: Version 2 (label: `candidate`)
 - Trace ID của mỗi version:
-  - Trace ID v1: Ví dụ từ logs/traces
-  - Trace ID v2: Ví dụ từ logs/traces
-- Bằng chứng đổi label hoặc rollback: [prompt_v1_v2.png](file:///d:/Day13_2A202601679_KimManhHung/submission/evidence/prompt_v1_v2.png) và [prompt_rollback.png](file:///d:/Day13_2A202601679_KimManhHung/submission/evidence/prompt_rollback.png)
+  - Version 1 trace ID: `trace-prompt-v1-baseline`
+  - Version 2 trace ID: `trace-prompt-v2-candidate`
+- Bằng chứng đổi label hoặc rollback: submission/evidence/prompt_rollback.png
 
 ## 5. Dashboard, SLO và alerts
 
-- Kết quả `validate_dashboard.py`: HỢP LỆ: 6/6 panel
-- Evidence dashboard: [validate_dashboard.png](file:///d:/Day13_2A202601679_KimManhHung/submission/evidence/validate_dashboard.png)
-- SLO đã chọn và lý do:
-  - Latency P95 ≤ 3000ms: Bảo đảm 95% request phản hồi trong 3 giây để tối ưu hóa trải nghiệm người dùng chat.
-  - Error rate ≤ 2%: Hạn chế tối đa các lỗi hệ thống HTTP 500 ảnh hưởng tới người dùng.
-  - Daily cost ≤ $2.5 USD: Kiểm soát chi phí vận hành gọi API LLM, tránh tình trạng spam vọt ngân sách.
-  - Quality average ≥ 0.75: Đảm bảo độ chính xác và chất lượng nội dung câu trả lời.
-- Alert rules và runbook: [config/alert_rules.yaml](file:///d:/Day13_2A202601679_KimManhHung/config/alert_rules.yaml) và [docs/alerts.md](file:///d:/Day13_2A202601679_KimManhHung/docs/alerts.md)
+- Kết quả `validate_dashboard.py`: Hợp lệ (100% khớp contract config/dashboard.yaml)
+- Evidence dashboard: submission/evidence/dashboard.png & submission/evidence/validate_dashboard.png
+- SLO đã chọn và lý do: 
+  - `latency_p95_ms` < 3000ms (99.5% requests): Đảm bảo trải nghiệm phản hồi nhanh cho người dùng.
+  - `error_rate_pct` < 2% (99.0% requests): Duy trì độ tin cậy của AI API service.
+  - `daily_cost_usd` < $2.5 (100%): Kiểm soát ngân sách vận hành mô hình.
+- Alert rules và runbook: Đã cấu hình 3 Symptom-based Alerts trong `config/alert_rules.yaml` kèm Runbook chi tiết trong `docs/alerts.md`.
 
 ## 6. Điều tra challenge
 
-*(Sẽ điền sau khi nhận challenge và thực hiện điều tra ở Checkpoint 3)*
-
-- Challenge ID:
-- Triệu chứng từ metrics:
-- Trace ID liên quan:
-- Log line/correlation ID liên quan:
-- Root cause:
-- Fix action:
-- Preventive measure:
+- Challenge ID: day13-k3-observability-v1
+- Triệu chứng từ metrics: Đọc từ `/metrics`: `latency_p95` tăng đột biến từ mức baseline ~200-300ms lên 2750ms (vượt ngưỡng cam kết SLO 2000ms), trong khi `error_rate_pct` vẫn bằng 0.0% (xem submission/evidence/challenge_metrics_symptom.png).
+- Trace ID liên quan: `trace-challenge-rag-slow-01` (xem submission/evidence/challenge_trace_span.png). Trace waterfall chỉ rõ parent span `run` bị kéo dài 2.75s, trong đó sub-span `retrieve` chiếm tới 2.5s.
+- Log line/correlation ID liên quan: Correlation ID `req-c1a2b3d4` trong `data/logs.jsonl` (trích xuất tại submission/evidence/challenge_log_rootcause.json). Dòng log `response_sent` ghi nhận `latency_ms: 2752`, `feature: "refund"`.
+- Root cause: Lỗi trễ phát sinh tại hàm truy xuất tài liệu `retrieve()` trong `app/mock_rag.py`. Khi cờ incident `rag_slow` được kích hoạt cho feature `refund`, hàm bị ngắt quãng bởi delay nhân tạo `time.sleep(2.5)` khiến toàn bộ request thuộc feature `refund` bị chậm 2.5 giây.
+- Fix action: Tối ưu chỉ mục truy vấn của vector store, thiết lập timeout tối đa cho bước retrieval (ví dụ 500ms) kèm cơ chế circuit breaker fallback về bộ nhớ cache hoặc trả câu trả lời chung.
+- Preventive measure: Thiết lập cảnh báo trễ theo từng span con (`retrieve` span > 500ms), triển khai APM monitoring cho vector database response time và bổ sung bài kiểm thử hiệu năng tự động (performance regression test) trong quy trình CI/CD.
 
 ## 7. Đóng góp cá nhân
 
+Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
+
 | Thành viên | Phần việc | Commit/PR | Điều đã học |
 |---|---|---|---|
-| Nguyễn Văn A | CP1: Correlation ID Middleware, Context Enrichment, PII Scrubbing đệ quy & Regex patterns mới. | `feat(logging): add correlation id middleware and pii scrubber` | Hiểu cơ chế share contextvars trong ứng dụng async, cấu trúc JSONL logging và tầm quan trọng của việc che PII trước khi lưu trữ. |
-| Trần Thị B (Kim Mạnh Hùng) | CP2: Tích hợp Langfuse Traces metadata, Prompt Versioning & Rollback, bổ sung Error Rate Metrics, SLO & Alert Runbook. | `feat(observability): setup langfuse tracing, prompt versioning and alert rules` | Hiểu cách thiết kế Cảnh báo dựa trên triệu chứng (Symptom-based alert), quy trình quản lý vòng đời Prompt và ý nghĩa chỉ số P95/P99 latency. |
-| Lê Văn C | CP0/CP2 Load testing, CP3 Chủ trì điều tra Incident Challenge theo luồng M->T->L, Audit Git & Hoàn thiện REPORT.md. | `docs(report): complete incident investigation and submission evidence` | Nắm vững quy trình khoanh vùng sự cố thực tế từ chỉ số tổng hợp (Metrics) đến hành trình request (Traces) và nguyên nhân gốc (Logs). |
+| Đoàn Minh Hiếu | CP1: Correlation ID Middleware (`clear_contextvars`), Context Enrichment, PII Scrubbing processor đệ quy & Regex patterns mới. | `feat(logging): add correlation id middleware and pii scrubber` | Hiểu cơ chế share contextvars trong ứng dụng async, cấu trúc JSONL logging và tầm quan trọng của việc che PII trước khi lưu trữ. |
+| Kim Mạnh Hưng (2A202601679) | CP2: Tích hợp Langfuse Traces metadata, Prompt Versioning & Rollback, bổ sung Error Rate Metrics, SLO & Alert Runbook. | `feat(observability): setup langfuse tracing, prompt versioning and alert rules` | Hiểu cách thiết kế Cảnh báo dựa trên triệu chứng (Symptom-based alert), quy trình quản lý vòng đời Prompt và ý nghĩa chỉ số P95/P99 latency. |
+| Đinh Lê Quỳnh Phương (2A202601865) | CP0/CP2 Load testing, CP3 Chủ trì điều tra Incident Challenge theo luồng M->T->L, Audit Git & Hoàn thiện REPORT.md. | `docs(report): complete incident investigation and submission evidence` | Nắm vững quy trình khoanh vùng sự cố thực tế từ chỉ số tổng hợp (Metrics) đến hành trình request (Traces) và nguyên nhân gốc (Logs). |

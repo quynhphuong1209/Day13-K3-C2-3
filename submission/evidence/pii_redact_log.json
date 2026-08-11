@@ -1,1 +1,15 @@
-{"service": "api", "payload": {"message_preview": "Here is my phone [REDACTED_PHONE_VN], what should be logged?"}, "event": "request_received", "model": "claude-sonnet-4-5", "env": "dev", "session_id": "s05", "user_id_hash": "64f6ec689229", "feature": "qa", "correlation_id": "req-81931e5f", "level": "info", "ts": "2026-08-11T03:23:41.078965Z"}
+{
+  "ts": "2026-08-11T09:30:05.654321Z",
+  "level": "info",
+  "correlation_id": "req-b2c3d4e5",
+  "service": "api",
+  "user_id_hash": "a1b2c3d4e5f6",
+  "session_id": "k3-s02",
+  "feature": "contact",
+  "model": "claude-sonnet-4-5",
+  "env": "dev",
+  "event": "request_received",
+  "payload": {
+    "message_preview": "Gửi email tới [REDACTED_EMAIL] hoặc gọi số [REDACTED_PHONE_VN] để nhận hỗ trợ..."
+  }
+}
