@@ -1,0 +1,15 @@
+{
+  "ts": "2026-08-11T09:30:00.123456Z",
+  "level": "info",
+  "correlation_id": "req-a1b2c3d4",
+  "service": "api",
+  "user_id_hash": "e3b0c44298fc",
+  "session_id": "k3-s01",
+  "feature": "search",
+  "model": "claude-sonnet-4-5",
+  "env": "dev",
+  "event": "request_received",
+  "payload": {
+    "message_preview": "Hỏi đáp về quy trình bảo hành sản phẩm..."
+  }
+}
