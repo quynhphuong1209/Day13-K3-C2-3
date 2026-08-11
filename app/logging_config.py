@@ -22,17 +22,18 @@ class JsonlFileProcessor:
         return event_dict
 
 
+def scrub_recursive(val: Any) -> Any:
+    if isinstance(val, dict):
+        return {k: scrub_recursive(v) for k, v in val.items()}
+    elif isinstance(val, list):
+        return [scrub_recursive(item) for item in val]
+    elif isinstance(val, str):
+        return scrub_text(val)
+    return val
+
 
 def scrub_event(_: Any, __: str, event_dict: dict[str, Any]) -> dict[str, Any]:
-    payload = event_dict.get("payload")
-    if isinstance(payload, dict):
-        event_dict["payload"] = {
-            k: scrub_text(v) if isinstance(v, str) else v for k, v in payload.items()
-        }
-    if "event" in event_dict and isinstance(event_dict["event"], str):
-        event_dict["event"] = scrub_text(event_dict["event"])
-    return event_dict
-
+    return scrub_recursive(event_dict)
 
 
 def configure_logging() -> None:
@@ -42,7 +43,6 @@ def configure_logging() -> None:
             merge_contextvars,
             structlog.processors.add_log_level,
             structlog.processors.TimeStamper(fmt="iso", utc=True, key="ts"),
-            # TODO: Register your PII scrubbing processor here
             scrub_event,
             structlog.processors.StackInfoRenderer(),
             structlog.processors.format_exc_info,
@@ -52,7 +52,6 @@ def configure_logging() -> None:
         wrapper_class=structlog.make_filtering_bound_logger(logging.INFO),
         cache_logger_on_first_use=True,
     )
-
 
 
 def get_logger() -> structlog.typing.FilteringBoundLogger:

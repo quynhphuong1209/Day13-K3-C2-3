@@ -42,17 +42,28 @@ async def metrics() -> dict:
     return snapshot()
 
 
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    error_type = type(exc).__name__
+    correlation_id = getattr(request.state, "correlation_id", "MISSING")
+    headers = {"x-request-id": correlation_id}
+    return JSONResponse(
+        status_code=500,
+        content={"detail": error_type},
+        headers=headers,
+    )
+
+
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: Request, body: ChatRequest) -> ChatResponse:
-    # TODO: Enrich logs with request context (user_id_hash, session_id, feature, model, env)
     bind_contextvars(
         user_id_hash=hash_user_id(body.user_id),
         session_id=body.session_id,
         feature=body.feature,
-        model=body.model,
+        model=agent.model,
         env=os.getenv("APP_ENV", "dev"),
     )
-
+    
     log.info(
         "request_received",
         service="api",
@@ -93,7 +104,7 @@ async def chat(request: Request, body: ChatRequest) -> ChatResponse:
             error_type=error_type,
             payload={"detail": str(exc), "message_preview": summarize_text(body.message)},
         )
-        raise HTTPException(status_code=500, detail=error_type) from exc
+        raise exc
 
 
 @app.post("/incidents/{name}/enable")
