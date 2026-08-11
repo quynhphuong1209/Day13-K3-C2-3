@@ -4,7 +4,7 @@
 
 - Tên nhóm: Nhóm C2-3 (K3)
 - Repository URL: https://github.com/quynhphuong1209/Day13-K3-C2-3
-- Commit SHA cuối: (Cập nhật SHA commit cuối khi push)
+- Commit SHA cuối: 61fff76eb1af3bd26e7678dc49d6fe69f245ee57
 - Thành viên và vai trò:
   - Đoàn Minh Hiếu: Backend & Security Engineer (Logging, Correlation ID, PII Redaction)
   - Kim Mạnh Hưng (MSHV: 2A202601679): SRE, Tracing & Dashboard Engineer (Langfuse Tracing, Prompt Versioning, Dashboard Spec, SLO & Alerts)
@@ -22,6 +22,8 @@
 - Evidence correlation ID: submission/evidence/correlation_id_log.json
 - Evidence PII redaction: submission/evidence/pii_redact_log.json
 - Evidence trace waterfall: submission/evidence/trace_waterfall.png
+- Evidence Langfuse traces: submission/evidence/langfuse_traces.png
+- Evidence validate logs: submission/evidence/validate_logs.png
 - Giải thích một span đáng chú ý: Span `run` của agent đóng vai trò parent span chứa metadata `correlation_id`, `user_id_hash`, `session_id`. Các sub-span `retrieve` (truy xuất RAG) và `generate` (sinh văn bản LLM) phản ánh thời gian thực thi của từng thành phần con, giúp nhanh chóng khoanh vùng bước bị chậm khi có sự cố.
 
 ## 4. Prompt versioning
@@ -33,6 +35,7 @@
   - Version 1 trace ID: `trace-prompt-v1-baseline`
   - Version 2 trace ID: `trace-prompt-v2-candidate`
 - Bằng chứng đổi label hoặc rollback: submission/evidence/prompt_rollback.png
+- Evidence prompt versions: submission/evidence/prompt_v1_v2.png
 
 ## 5. Dashboard, SLO và alerts
 
@@ -47,7 +50,7 @@
 ## 6. Điều tra challenge
 
 - Challenge ID: day13-k3-observability-v1
-- Triệu chứng từ metrics: Đọc từ `/metrics`: `latency_p95` tăng đột biến từ mức baseline ~200-300ms lên 2750ms (vượt ngưỡng cam kết SLO 2000ms), trong khi `error_rate_pct` vẫn bằng 0.0% (xem submission/evidence/challenge_metrics_symptom.png).
+- Triệu chứng từ metrics: Đọc từ `/metrics`: `latency_p95` tăng đột biến từ mức baseline ~200-300ms lên 2750ms (vượt ngưỡng cam kết SLO 2000ms), trong khi `error_rate_pct` vẫn bằng 0.0%.
 - Trace ID liên quan: `trace-challenge-rag-slow-01` (xem submission/evidence/challenge_trace_span.png). Trace waterfall chỉ rõ parent span `run` bị kéo dài 2.75s, trong đó sub-span `retrieve` chiếm tới 2.5s.
 - Log line/correlation ID liên quan: Correlation ID `req-c1a2b3d4` trong `data/logs.jsonl` (trích xuất tại submission/evidence/challenge_log_rootcause.json). Dòng log `response_sent` ghi nhận `latency_ms: 2752`, `feature: "refund"`.
 - Root cause: Lỗi trễ phát sinh tại hàm truy xuất tài liệu `retrieve()` trong `app/mock_rag.py`. Khi cờ incident `rag_slow` được kích hoạt cho feature `refund`, hàm bị ngắt quãng bởi delay nhân tạo `time.sleep(2.5)` khiến toàn bộ request thuộc feature `refund` bị chậm 2.5 giây.
