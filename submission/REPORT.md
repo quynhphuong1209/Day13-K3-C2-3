@@ -6,8 +6,8 @@
 - Repository URL: https://github.com/quynhphuong1209/Day13-K3-C2-3
 - Commit SHA cuối: (Cập nhật SHA commit cuối khi push)
 - Thành viên và vai trò:
-  - Nguyễn Văn A: Backend & Security Engineer (Logging, Correlation ID, PII Redaction)
-  - Trần Thị B: SRE, Tracing & Dashboard Engineer (Langfuse Tracing, Prompt Versioning, Dashboard Spec, SLO & Alerts)
+  - Đoàn Minh Hiếu: Backend & Security Engineer (Logging, Correlation ID, PII Redaction)
+  - Kim Mạnh Hưng (MSHV: 2A202601679): SRE, Tracing & Dashboard Engineer (Langfuse Tracing, Prompt Versioning, Dashboard Spec, SLO & Alerts)
   - Đinh Lê Quỳnh Phương (MSHV: 2A202601865): QA & Chief Incident Investigator (Load Testing, Incident Investigation Lead, Git Audit & Report Synthesis)
 
 ## 2. Kết quả kỹ thuật
@@ -60,6 +60,6 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 
 | Thành viên | Phần việc | Commit/PR | Điều đã học |
 |---|---|---|---|
-| Nguyễn Văn A | CP1: Correlation ID Middleware (`clear_contextvars`), Context Enrichment, PII Scrubbing processor đệ quy & Regex patterns mới. | `feat(logging): add correlation id middleware and pii scrubber` | Hiểu cơ chế share contextvars trong ứng dụng async, cấu trúc JSONL logging và tầm quan trọng của việc che PII trước khi lưu trữ. |
-| Trần Thị B | CP2: Tích hợp Langfuse Traces metadata, Prompt Versioning & Rollback, bổ sung Error Rate Metrics, SLO & Alert Runbook. | `feat(observability): setup langfuse tracing, prompt versioning and alert rules` | Hiểu cách thiết kế Cảnh báo dựa trên triệu chứng (Symptom-based alert), quy trình quản lý vòng đời Prompt và ý nghĩa chỉ số P95/P99 latency. |
+| Đoàn Minh Hiếu | CP1: Correlation ID Middleware (`clear_contextvars`), Context Enrichment, PII Scrubbing processor đệ quy & Regex patterns mới. | `feat(logging): add correlation id middleware and pii scrubber` | Hiểu cơ chế share contextvars trong ứng dụng async, cấu trúc JSONL logging và tầm quan trọng của việc che PII trước khi lưu trữ. |
+| Kim Mạnh Hưng (2A202601679) | CP2: Tích hợp Langfuse Traces metadata, Prompt Versioning & Rollback, bổ sung Error Rate Metrics, SLO & Alert Runbook. | `feat(observability): setup langfuse tracing, prompt versioning and alert rules` | Hiểu cách thiết kế Cảnh báo dựa trên triệu chứng (Symptom-based alert), quy trình quản lý vòng đời Prompt và ý nghĩa chỉ số P95/P99 latency. |
 | Đinh Lê Quỳnh Phương (2A202601865) | CP0/CP2 Load testing, CP3 Chủ trì điều tra Incident Challenge theo luồng M->T->L, Audit Git & Hoàn thiện REPORT.md. | `docs(report): complete incident investigation and submission evidence` | Nắm vững quy trình khoanh vùng sự cố thực tế từ chỉ số tổng hợp (Metrics) đến hành trình request (Traces) và nguyên nhân gốc (Logs). |

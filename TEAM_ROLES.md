@@ -136,9 +136,9 @@ Dán bảng bên dưới vào **Mục 7 (Đóng góp cá nhân)** trong file `su
 ```markdown
 | Thành viên | Phần việc | Commit/PR | Điều đã học |
 |---|---|---|---|
-| Nguyễn Văn A | CP1: Correlation ID Middleware (`clear_contextvars`), Context Enrichment, PII Scrubbing processor đệ quy & Regex patterns mới. | `feat(logging): add correlation id middleware and pii scrubber` | Hiểu cơ chế share contextvars trong ứng dụng async, cấu trúc JSONL logging và tầm quan trọng của việc che PII trước khi lưu trữ. |
-| Trần Thị B | CP2: Tích hợp Langfuse Traces metadata, Prompt Versioning & Rollback, bổ sung Error Rate Metrics, SLO & Alert Runbook. | `feat(observability): setup langfuse tracing, prompt versioning and alert rules` | Hiểu cách thiết kế Cảnh báo dựa trên triệu chứng (Symptom-based alert), quy trình quản lý vòng đời Prompt và ý nghĩa chỉ số P95/P99 latency. |
-| Lê Văn C | CP0/CP2 Load testing, CP3 Chủ trì điều tra Incident Challenge theo luồng M->T->L, Audit Git & Hoàn thiện REPORT.md. | `docs(report): complete incident investigation and submission evidence` | Nắm vững quy trình khoanh vùng sự cố thực tế từ chỉ số tổng hợp (Metrics) đến hành trình request (Traces) và nguyên nhân gốc (Logs). |
+| Đoàn Minh Hiếu | CP1: Correlation ID Middleware (`clear_contextvars`), Context Enrichment, PII Scrubbing processor đệ quy & Regex patterns mới. | `feat(logging): add correlation id middleware and pii scrubber` | Hiểu cơ chế share contextvars trong ứng dụng async, cấu trúc JSONL logging và tầm quan trọng của việc che PII trước khi lưu trữ. |
+| Kim Mạnh Hưng (2A202601679) | CP2: Tích hợp Langfuse Traces metadata, Prompt Versioning & Rollback, bổ sung Error Rate Metrics, SLO & Alert Runbook. | `feat(observability): setup langfuse tracing, prompt versioning and alert rules` | Hiểu cách thiết kế Cảnh báo dựa trên triệu chứng (Symptom-based alert), quy trình quản lý vòng đời Prompt và ý nghĩa chỉ số P95/P99 latency. |
+| Đinh Lê Quỳnh Phương (2A202601865) | CP0/CP2 Load testing, CP3 Chủ trì điều tra Incident Challenge theo luồng M->T->L, Audit Git & Hoàn thiện REPORT.md. | `docs(report): complete incident investigation and submission evidence` | Nắm vững quy trình khoanh vùng sự cố thực tế từ chỉ số tổng hợp (Metrics) đến hành trình request (Traces) và nguyên nhân gốc (Logs). |
 ```
 
 ---
